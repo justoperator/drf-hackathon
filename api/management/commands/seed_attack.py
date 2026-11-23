@@ -9,6 +9,8 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
+from api.models import ParkingLevel
+
 # Ті самі паролі — у contract.json.
 ATTACKERS = {"attacker1": "attack-pass-1", "attacker2": "attack-pass-2"}
 
@@ -21,12 +23,23 @@ class Command(BaseCommand):
         for username, password in ATTACKERS.items():
             user, _ = User.objects.get_or_create(username=username)
             user.set_password(password)
+            user.is_staff = False
+            user.is_superuser = False
+            user.is_active = True
             user.save()
 
-        # TODO (Моделі), через update_or_create, щоб повторний запуск відновлював стан:
-        #   1. кілька звичайних елементів каталогу із залишком 50;
-        #   2. один елемент для гонки із залишком рівно 1 — його id іде
-        #      в contract.json як "race_item".
-        # Заявки attacker2 створювати не треба: скрипт атаки зробить це сам.
+        levels = (
+            (1, "Рівень -1", 50),
+            (2, "Рівень 0", 50),
+            (3, "Рівень 1", 50),
+            (4, "Рівень 2", 1),
+        )
+        for level_id, name, available in levels:
+            ParkingLevel.objects.update_or_create(
+                pk=level_id,
+                defaults={"name": name, "available": available},
+            )
 
-        self.stdout.write(self.style.SUCCESS("Готово: attacker1, attacker2, каталог."))
+        self.stdout.write(
+            self.style.SUCCESS("Готово: attacker1, attacker2 і місця паркінгу.")
+        )
