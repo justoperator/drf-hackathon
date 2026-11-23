@@ -226,3 +226,9 @@ python manage.py makemigrations --check --dry-run
   `MinValueValidator(1)`, а також перевірку БД `quantity__gte=1`.
 - Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
 - Далі: перевірити єдині значення стану заявки.
+
+### 2026-11-23 — Данило / T7
+- Перевірено: `ParkingRequest.Status` визначає рівно три стани —
+  `draft`, `confirmed` і `cancelled`; поле має ці `choices` і default draft.
+- Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
+- Далі: перевірити зв’язок заявки з поточним власником.
