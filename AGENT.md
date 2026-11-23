@@ -238,3 +238,11 @@ python manage.py makemigrations --check --dry-run
   `AUTH_USER_MODEL`, із `CASCADE` і окремим related name.
 - Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
 - Далі: перевірити назви та зрозумілість перевірок БД.
+
+### 2026-11-23 — Данило / T9
+- Перевірено: обидва `CheckConstraint` мають зрозумілі стабільні назви —
+  `parking_level_available_nonnegative` і
+  `parking_request_quantity_positive`.
+- Перевірено: повний цикл перевірки моделей і міграцій у віртуальному
+  середовищі; незавершених питань у межах T1–T9 немає.
+- Далі: за потреби виконати загальну перевірку команди до демонстрації.
