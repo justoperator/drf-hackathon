@@ -1,10 +1,9 @@
-# API-спринт · стартовий скелет
+# API-спринт · паркінг
 
-Порожній проєкт, у якому вже є все, що не є змістом дня: DRF, вхід через JWT,
+Проєкт паркінгу, у якому вже є все, що не є змістом дня: DRF, вхід через JWT,
 SQLite, налаштований під одночасні запити, і скрипти атаки. Ваша робота — `api/`.
 
-> Цей файл — шаблон. Роль «Моделі» заповнює розділи **«Наш домен»** і **«Сценарій
-> у curl»** під ваш домен, решту лишіть як є: за ним вашу ціль готуватиме інша команда.
+> Обмежений ресурс — вільні місця на рівні паркінгу.
 
 ## Запуск
 
@@ -83,9 +82,46 @@ python tools/race.py --help
 
 ## Наш домен
 
-*Заповнити:* домен, обмежений ресурс, адреси каталогу й заявок, поля.
+Паркінг: каталог рівнів (`/api/v1/levels/`) має поле `available` з кількістю
+вільних місць. Заявка (`/api/v1/parking-requests/`) містить рівень, `quantity`,
+власника і серверний `status`.
 
 ## Сценарій у curl
 
-*Заповнити:* вхід → каталог → заявка → `confirm` → залишок зменшився → повторний
-`confirm` `409` → `cancel` → залишок повернувся.
+Домен за замовчуванням: `http://127.0.0.1:8000`.
+
+```bash
+# 1. Отримати токен.
+curl -s -X POST http://127.0.0.1:8000/api/v1/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"attacker1\",\"password\":\"attack-pass-1\"}"
+
+# 2. Подивитися каталог і знайти рівень з доступними місцями.
+curl -s http://127.0.0.1:8000/api/v1/levels/
+
+# 3. Створити заявку на рівень 4 на 1 місце.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d "{\"level\":4,\"quantity\":1}"
+
+# 4. Підтвердити заявку. Після цього available на рівні зменшиться.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/confirm/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# 5. Повторний confirm поверне 409.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/confirm/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# 6. Cancel підтвердженої заявки поверне місце назад.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/cancel/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# Перевірити залишок після cancel.
+curl -s http://127.0.0.1:8000/api/v1/levels/4/
+```
+
+У прикладі задайте змінну shell `ACCESS_TOKEN` значенням поля `access`
+з відповіді входу.
+Повторний `confirm` повертає `409`, а seed відновлює елемент гонки до
+залишку `1`: `python manage.py seed_attack`.
