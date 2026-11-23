@@ -29,6 +29,7 @@ def _validate_quantity(quantity):
     if isinstance(quantity, bool) or not isinstance(quantity, int) or quantity < 1:
         raise InvalidParkingRequestQuantity
 
+
 def _locked_request(request_id, user):
     try:
         return (
