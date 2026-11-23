@@ -232,3 +232,9 @@ python manage.py makemigrations --check --dry-run
   `draft`, `confirmed` і `cancelled`; поле має ці `choices` і default draft.
 - Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
 - Далі: перевірити зв’язок заявки з поточним власником.
+
+### 2026-11-23 — Данило / T8
+- Перевірено: `owner` є `ForeignKey` на налаштовану модель користувача
+  `AUTH_USER_MODEL`, із `CASCADE` і окремим related name.
+- Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
+- Далі: перевірити назви та зрозумілість перевірок БД.
