@@ -220,3 +220,9 @@ python manage.py makemigrations --check --dry-run
   `on_delete=models.PROTECT`, тому видалення зайнятого рівня заборонене.
 - Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
 - Далі: перевірити валідатор позитивної кількості заявки.
+
+### 2026-11-23 — Данило / T6
+- Перевірено: `ParkingRequest.quantity` має `PositiveIntegerField` і
+  `MinValueValidator(1)`, а також перевірку БД `quantity__gte=1`.
+- Перевірено: `manage.py check`, `makemigrations --check --dry-run`.
+- Далі: перевірити єдині значення стану заявки.
