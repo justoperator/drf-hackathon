@@ -88,5 +88,39 @@ python tools/race.py --help
 
 ## Сценарій у curl
 
-Вхід → каталог → заявка → `confirm` → кількість вільних місць зменшилася →
-повторний `confirm` повертає `409` → `cancel` повертає місця.
+Домен за замовчуванням: `http://127.0.0.1:8000`.
+
+```bash
+# 1. Отримати токен.
+curl -s -X POST http://127.0.0.1:8000/api/v1/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"attacker1\",\"password\":\"attack-pass-1\"}"
+
+# 2. Подивитися каталог і знайти рівень з доступними місцями.
+curl -s http://127.0.0.1:8000/api/v1/levels/
+
+# 3. Створити заявку на рівень 4 на 1 місце.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d "{\"level\":4,\"quantity\":1}"
+
+# 4. Підтвердити заявку. Після цього available на рівні зменшиться.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/confirm/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# 5. Повторний confirm поверне 409.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/confirm/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# 6. Cancel підтвердженої заявки поверне місце назад.
+curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/cancel/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+# Перевірити залишок після cancel.
+curl -s http://127.0.0.1:8000/api/v1/levels/4/
+```
+
+У прикладі `<ACCESS_TOKEN>` замініть на поле `access` із відповіді входу.
+Повторний `confirm` повертає `409`, а seed відновлює елемент гонки до
+залишку `1`: `python manage.py seed_attack`.
