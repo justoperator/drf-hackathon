@@ -293,9 +293,9 @@ Views не повинні самі рахувати доступні місця.
 5. [x] T5: Створити рівень гонки із залишком рівно `1`.
 6. [x] T6: Використати `update_or_create()` для повторного відновлення каталогу.
 7. [x] T7: Очистити або відновити стан тільки тестових заявок у seed.
-8. [ ] T8: Записати реальний `race_item` у `contract.json`.
-9. [ ] T9: Заповнити items, orders, item_field, qty_field і left_field.
-10. [ ] T10: Узгодити паролі у `contract.json` і `seed_attack.py`.
+8. [x] T8: Записати реальний `race_item` у `contract.json`.
+9. [x] T9: Заповнити items, orders, item_field, qty_field і left_field.
+10. [x] T10: Узгодити паролі у `contract.json` і `seed_attack.py`.
 11. [ ] T11: Дописати реальний домен і curl-сценарій у `README.md`.
 12. [ ] T12: Після seed перевірити каталог і елемент гонки через API.
 
