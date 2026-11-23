@@ -6,7 +6,7 @@ from django.db.models import Q
 
 
 class ParkingLevel(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     available = models.PositiveIntegerField()
 
     class Meta:
