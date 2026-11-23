@@ -9,7 +9,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from api.models import ParkingLevel
+from api.models import ParkingLevel, ParkingRequest
 
 # Ті самі паролі — у contract.json.
 ATTACKERS = {"attacker1": "attack-pass-1", "attacker2": "attack-pass-2"}
@@ -20,6 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         User = get_user_model()
+        test_user_ids = []
         for username, password in ATTACKERS.items():
             user, _ = User.objects.get_or_create(username=username)
             user.set_password(password)
@@ -27,6 +28,9 @@ class Command(BaseCommand):
             user.is_superuser = False
             user.is_active = True
             user.save()
+            test_user_ids.append(user.pk)
+
+        ParkingRequest.objects.filter(owner_id__in=test_user_ids).delete()
 
         levels = (
             (1, "Рівень -1", 50),
