@@ -6,8 +6,10 @@ from django.db.models import Q
 
 
 class ParkingLevel(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    available = models.PositiveIntegerField()
+    name = models.CharField(max_length=50, unique=True)
+    available = models.PositiveIntegerField(
+        validators=[MinValueValidator(0)],
+    )
 
     class Meta:
         constraints = [
@@ -16,7 +18,7 @@ class ParkingLevel(models.Model):
                 name="parking_level_available_nonnegative",
             ),
         ]
-        ordering = ["id"]
+        ordering = ["name", "id"]
 
     def __str__(self):
         return self.name
