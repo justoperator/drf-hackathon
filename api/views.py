@@ -60,9 +60,12 @@ class ParkingRequestViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.status == ParkingRequest.Status.CONFIRMED:
+        if instance.status in (
+            ParkingRequest.Status.CONFIRMED,
+            ParkingRequest.Status.CANCELLED,
+        ):
             return Response(
-                {"detail": "Підтверджену заявку спочатку треба скасувати."},
+                {"detail": "Підтверджені та скасовані заявки не можна видаляти."},
                 status=status.HTTP_409_CONFLICT,
             )
         return super().destroy(request, *args, **kwargs)
