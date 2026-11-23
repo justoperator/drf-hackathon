@@ -9,6 +9,7 @@ from .permissions import IsParkingRequestOwner, ReadOnlyCatalogPermission
 from .serializers import ParkingLevelSerializer, ParkingRequestSerializer
 from .services import (
     InsufficientParkingSpots,
+    InvalidParkingRequestQuantity,
     InvalidParkingRequestState,
     ParkingRequestNotFound,
     cancel_request,
@@ -77,6 +78,11 @@ class ParkingRequestViewSet(viewsets.ModelViewSet):
         except InsufficientParkingSpots:
             return Response(
                 {"detail": "На рівні недостатньо вільних місць."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except InvalidParkingRequestQuantity:
+            return Response(
+                {"detail": "Кількість місць має бути додатним цілим числом."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except InvalidParkingRequestState:
