@@ -18,7 +18,7 @@ class ParkingLevel(models.Model):
                 name="parking_level_available_nonnegative",
             ),
         ]
-        ordering = ["id"]
+        ordering = ["name", "id"]
 
     def __str__(self):
         return self.name
