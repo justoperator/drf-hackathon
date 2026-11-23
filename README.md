@@ -121,6 +121,7 @@ curl -s -X POST http://127.0.0.1:8000/api/v1/parking-requests/1/cancel/ \
 curl -s http://127.0.0.1:8000/api/v1/levels/4/
 ```
 
-У прикладі `<ACCESS_TOKEN>` замініть на поле `access` із відповіді входу.
+У прикладі задайте змінну shell `ACCESS_TOKEN` значенням поля `access`
+з відповіді входу.
 Повторний `confirm` повертає `409`, а seed відновлює елемент гонки до
 залишку `1`: `python manage.py seed_attack`.
